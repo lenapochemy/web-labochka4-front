@@ -1,4 +1,5 @@
 <template>
+
   <h1>Вход</h1>
   <form @submit.prevent="logIn">
     <div>
@@ -9,37 +10,55 @@
       <label for="password">Пароль</label>
       <input type="password" id="password" name="password" v-model="password" required>
     </div>
-    <input type="submit" value="Войти">
+    <input class="but" type="submit" value="Войти">
   </form>
   <span id="res"></span>
 
+
 </template>
 
-<script setup>
+<script>
 import axios from "axios";
 
-let login = "";
-let password = "";
+export default {
+  name: "LogInComponent",
+  data(){
+    return {
+      login: null,
+      password: null
+    }
+  },
+  methods: {
+    logIn: function (){
+      let json = JSON.stringify({login: this.login, password: this.password});
+     // let forma = FormComponent;
 
-const logIn = () => {
-  let json = JSON.stringify({login: login, password: password});
-
-  axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/login", json)
-      .then(response => {
-        if(response.data.result === "success"){
-          document.getElementById("res").innerHTML = "login success";
-        } else {
-          document.getElementById("res").innerHTML = "wrong login or password, try again";
-        }
-      })
-      .catch(error => console.log(error));
+      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/login", json)
+          .then(response => {
+            if(response.data.result === "success"){
+              document.getElementById("res").innerHTML = "login success";
+              sessionStorage.setItem("login", this.login);
+              this.$router.push({name: 'main-page'});
+            } else {
+              document.getElementById("res").innerHTML = "wrong login or password, try again";
+            }
+          })
+          .catch(error => console.log(error));
+    }
+  }
 }
-
-// export default {
-//   name: "LogInComponent"
-// }
 </script>
 
 <style scoped>
-
+.but{
+  background-color: deeppink;
+  font-weight: bold;
+  padding: 4px 9px 4px;
+  font-size: large;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.but:hover, .but:focus{
+  background-color: lightpink;
+}
 </style>
