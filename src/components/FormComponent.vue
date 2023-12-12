@@ -152,10 +152,10 @@ export default {
         this.login = sessionStorage.getItem("login");
 
         let json = JSON.stringify({x: this.x.toString(), y: this.y.toString(), r: this.r.toString(), user: this.login});
-        console.log(json);
+        //console.log(json);
         axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/checkDot", json)
             .then(response => {
-              console.log(response);
+              //console.log(response);
               this.getDots();
             })
             .catch(error => console.log(error));

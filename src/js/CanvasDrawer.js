@@ -81,7 +81,74 @@ export class CanvasDrawer{
         this.ctx.moveTo(220, 0);
         this.ctx.lineTo(220, 440)
         this.ctx.stroke();
+
+       this.drawArrowhead(0 ,220, 440, 220);
+       this.drawArrowhead(220, 440, 220, 0);
+
+       this.drawAxisLabel('x', 430, 240);
+       this.drawAxisLabel('y', 200, 10);
+
+       this.drawTicks('x');
+       this.drawTicks('y');
+
+       this.drawAxisLabel('0', 210, 230);
+
+       const centerX = 220;
+       const centerY = 220;
+       const r = this.rToCanvas(this.lastR);
+
+        this.drawAxisLabel('R', centerX + r, centerY - 5);
+        this.drawAxisLabel('R/2', centerX + r / 2, centerY - 5);
+        this.drawAxisLabel('R', centerX + 5, centerY - r);
+        this.drawAxisLabel('R/2', centerX + 5, centerY - r / 2);
+        this.drawAxisLabel('- R', centerX - r, centerY - 5);
+        this.drawAxisLabel('- R/2', centerX - r / 2, centerY - 5);
+        this.drawAxisLabel('- R', centerX + 5, centerY + r);
+        this.drawAxisLabel('- R/2', centerX + 5, centerY + r / 2);
+
+
     }
+
+//рисует стрелочки
+    drawArrowhead(fromX, fromY, toX, toY){
+        const headLength = 7;
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+        this.ctx.moveTo(toX, toY);
+        this.ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+        this.ctx.moveTo(toX, toY);
+        this.ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+        this.ctx.stroke();
+    }
+
+    //рисует черточки
+    drawTicks(axis ){
+        const numTicks = 9;
+        const tickSpacing = 400 / (numTicks - 1);
+        const tickSize = 5;
+        this.ctx.beginPath();
+
+        for (let i = 0; i < numTicks; i++) {
+            const tickPosition = i * tickSpacing - 400 / 2;
+            if (axis === 'x') {
+                this.ctx.moveTo(220 + tickPosition, 220 - tickSize / 2);
+                this.ctx.lineTo(220 + tickPosition, 220 + tickSize / 2);
+            } else {
+                this.ctx.moveTo(220 - tickSize / 2, 220 + tickPosition);
+                this.ctx.lineTo(220 + tickSize / 2, 220 + tickPosition);
+            }
+        }
+        this.ctx.stroke();
+    }
+
+    // рисует подписи
+    drawAxisLabel(label, x, y){
+      //  this.ctx.fillStyle = 'rgba(0, 0, 0, 1)'; // Цвет и прозрачность заливки
+        this.ctx.fillStyle = "black"
+        this.ctx.font = '14px Arial';
+        this.ctx.fillText(label, x, y);
+        this.ctx.fillStyle = "deeppink";
+    }
+
 
     //переводят координаты туда и обратно
     xToCanvas(x){
