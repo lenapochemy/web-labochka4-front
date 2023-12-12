@@ -1,4 +1,7 @@
 <template>
+  <div id="clock">
+    <span class="clocks" id="h"/> : <span class="clocks" id="m"/> : <span class="clocks" id="s"/>
+  </div>
 
   <div class="hello">Привет, {{login}}!</div>
   <LogOutComponent/>
@@ -100,7 +103,7 @@
       <td>{{dot.x}}</td>
       <td>{{dot.y}}</td>
       <td>{{dot.r}}</td>
-      <td>{{dot.result}}</td>
+      <td v-bind:class="dot.resultClass">{{dot.resultString}}</td>
       <td>{{dot.time}}</td>
     </tr>
   </table>
@@ -255,11 +258,6 @@ export default {
   font-size: large;
   font-weight: bold;
 }
-
-.fail{
-  color: red;
-}
-
 table tr:hover{
   color: darkblue;
   background-color: deeppink;
@@ -303,15 +301,22 @@ table > tr{
     grid-template-columns: 1fr;
   }
 }
-
+#clock{
+  font-family: fantasy;
+  color: dodgerblue;
+  text-shadow: 2px 2px 2px black;
+  font-size: 3rem;
+  word-spacing: 3pt;
+  letter-spacing: 2pt;
+}
 
 .coord{
   margin: 10px;
 }
-.false{
+.fail{
   color: red;
 }
-.true{
+.success{
   color: green;
 }
 

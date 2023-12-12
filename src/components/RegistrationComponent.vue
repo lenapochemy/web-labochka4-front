@@ -35,8 +35,8 @@ export default {
           .then(response => {
             const result = response.data;
             if(result.result === "success"){
-              document.getElementById("res").innerHTML = "registration was success";
-            } else document.getElementById("res").innerHTML = "this login already used, please try again";
+              document.getElementById("res").innerHTML = "Вы зарегистрированы, теперь можете входить";
+            } else document.getElementById("res").innerHTML = "Этот логин уже занят, пожалуйста выберите другой";
 
           })
           .catch(error => console.log(error));
