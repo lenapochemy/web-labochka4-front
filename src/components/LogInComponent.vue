@@ -3,11 +3,11 @@
   <h1>Вход</h1>
   <form @submit.prevent="logIn">
     <div>
-      <label for="login">Логин</label>
+      <label for="login">Логин </label>
       <input type="text" id="login" name="login" v-model="login" required>
     </div>
     <div>
-      <label for="password">Пароль</label>
+      <label for="password">Пароль </label>
       <input type="password" id="password" name="password" v-model="password" required>
     </div>
     <input class="but" type="submit" value="Войти">
@@ -31,16 +31,14 @@ export default {
   methods: {
     logIn: function (){
       let json = JSON.stringify({login: this.login, password: this.password});
-     // let forma = FormComponent;
-
       axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/login", json)
           .then(response => {
             if(response.data.result === "success"){
-              document.getElementById("res").innerHTML = "login success";
+              //document.getElementById("res").innerHTML = "";
               sessionStorage.setItem("login", this.login);
               this.$router.push({name: 'main-page'});
             } else {
-              document.getElementById("res").innerHTML = "wrong login or password, try again";
+              document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
             }
           })
           .catch(error => console.log(error));
@@ -60,5 +58,9 @@ export default {
 }
 .but:hover, .but:focus{
   background-color: lightpink;
+}
+
+label{
+  font-size: large;
 }
 </style>

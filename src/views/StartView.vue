@@ -5,22 +5,26 @@
     <div id="clock">
       <span class="clocks" id="h"/> : <span class="clocks" id="m"/> : <span class="clocks" id="s"/>
     </div>
-    <div id="forms">
-      <div>
+    <div class="start-container">
+    <div class="start-item" id="buttons">
+
         <button
             v-for="button in buttons"
             v-bind:key="button"
-            v-bind:class="['tab-button', {active: currentButton === button}]"
-            v-on:click="currentButton = button"
+            v-bind:class="['tab-button', {active: currentButton === button.value}]"
+            v-on:click="currentButton = button.value"
         >
-          {{button}}
+          {{button.name}}
         </button>
+    </div>
+
+      <div class="start-item">
         <component v-bind:is="currentButtonComponent"></component>
       </div>
 
-    </div>
-    <div>
+    <div class="start-item">
      <img src="../img/pig.jpg" alt="just pig">
+    </div>
     </div>
   </main>
 
@@ -44,7 +48,7 @@ export default {
         group: "P3217",
         variant: "1755"
       },
-      buttons: ["Registration", "LogIn"],
+      buttons: [{"value": "Registration", "name": "Регистрация"}, {"value": "LogIn", "name": "Вход"}],
       currentButton: "LogIn",
     }
   },
@@ -55,6 +59,7 @@ export default {
   },
   mounted() {
     this.updateClock();
+    sessionStorage.removeItem("login");
   },
   methods: {
     clock: function (){
@@ -83,8 +88,7 @@ export default {
   font-weight: bold;
   padding: 4px 9px 4px;
   font-size: large;
-  /*margin-top: 30px;*/
-  /*margin-bottom: 30px;*/
+  /*margin: 30px 10px;*/
   margin: auto;
 }
 .tab-button:hover, .tab-button:focus, .tab-button:active{
@@ -98,4 +102,35 @@ export default {
    word-spacing: 4pt;
    letter-spacing: 2pt;
  }
+
+.start-container{
+  display: grid;
+  /*grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));*/
+  /*gap: 20px;*/
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media (min-width: 748px) and (max-width: 1177px) {
+  .start-container{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 747px) {
+  .start-container{
+    grid-template-columns: 1fr;
+  }
+}
+
+.start-item{
+  align-self: center;
+
+}
+#clock{
+  margin-bottom: 20px;
+}
+img{
+  height: 400px;
+}
+
 </style>

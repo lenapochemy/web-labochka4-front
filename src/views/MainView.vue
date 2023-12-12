@@ -3,10 +3,6 @@
   <div>
     <FormComponent/>
   </div>
-  <img src="../img/capy.jpg" alt="capybara">
-  <div>
-
-  </div>
 
 </template>
 

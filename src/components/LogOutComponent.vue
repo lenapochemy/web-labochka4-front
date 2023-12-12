@@ -1,10 +1,9 @@
 <template>
-
-  <button class="but" @click.prevent="logout">Выйти</button>
-  <span id="logout"></span>
+  <button id="out" class="but" @click.prevent="logout">Выйти</button>
+<!--  <span id="logout"></span>-->
 </template>
 
-<script  >
+<script>
 import axios from "axios";
 
 export default {
@@ -14,16 +13,14 @@ export default {
       axios.get("http://localhost:8080/lab4-1.0-SNAPSHOT/api/logout")
           .then(response => {
             if(response.status === 200) {
-              //console.log(response);
-              document.getElementById("logout").innerHTML = "logout success";
+              // document.getElementById("logout").innerHTML = "logout success";
               sessionStorage.removeItem("login");
               sessionStorage.removeItem("dots");
               this.$router.push({name: 'start-page'});
             } else {
-              document.getElementById("logout").innerHTML =  "you already logout";
+              // document.getElementById("logout").innerHTML =  "you already logout";
             }
           }).catch(error => {
-        // document.getElementById("logout").innerHTML = error + "you already logout"
         console.log(error);
       })
     }
@@ -42,5 +39,10 @@ export default {
 }
 .but:hover, .but:focus{
   background-color: lightpink;
+}
+
+#out{
+  background-color: #31d1f5;
+
 }
 </style>

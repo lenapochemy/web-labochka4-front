@@ -2,8 +2,14 @@
 
   <div class="hello">Привет, {{login}}!</div>
   <LogOutComponent/>
-  <form>
 
+  <div class="main-container">
+    <div class="main-item">
+      <canvas ref="canvas" width="440" height="440"/>
+    </div>
+
+    <div class="main-item">
+  <form>
     <div class="coord">
       <span class="param">X: </span>
       <input type="radio" id="x-2" name="X" value="-2" v-model="x" />
@@ -17,7 +23,7 @@
 
       <input type="radio" id="x-0.5" name="X" value="-0.5" v-model="x"/>
       <label for="x-0.5">-0.5</label>
-
+<br>
       <input type="radio" id="x0" name="X" value="0" v-model="x" />
       <label for="x0">0</label>
 
@@ -55,7 +61,7 @@
 
       <input type="radio" id="r-0.5" name="R" value="-0.5" v-model="r" @change="incorrectR"/>
       <label for="r-0.5">-0.5</label>
-
+      <br>
       <input type="radio" id="r0" name="R" value="0" v-model="r" @change="incorrectR"/>
       <label for="r0">0</label>
 
@@ -75,17 +81,13 @@
     <input class="but" type="submit" @click.prevent="checkForm()" value="Проверить"/>
     </div>
   </form>
-
 <!--  <span>X: {{x}}, Y: {{y}}, R: {{r}}</span>-->
 
   <div class="fail" id="errMessageY"></div>
   <div class="fail" id="errMessageR"></div>
+    </div>
 
-  <div>
-    <canvas ref="canvas" width="440" height="440"/>
-  </div>
-
-  <div id="result_table">
+  <div class="main-item" id="result_table">
   <table border="1">
     <thead>
       <th>X</th>
@@ -102,6 +104,9 @@
       <td>{{dot.time}}</td>
     </tr>
   </table>
+  </div >
+
+<!--  <img class="main-item" src="../img/capy.jpg" alt="capybara">-->
   </div>
 </template>
 
@@ -127,6 +132,9 @@ export default {
   },
   mounted() {
     this.login = sessionStorage.getItem("login");
+    if(this.login == null){
+      this.$router.push({name: 'start-page'});
+    }
     this.getDots();
     this.dots = sessionStorage.getItem("dots");
     const canvas = this.$refs.canvas;
@@ -173,6 +181,7 @@ export default {
       }
     },
     validateY: function (){
+      this.y = this.y.replace(",", ".");
        if (!this.isNumeric(this.y)){
         this.createErrMessage("Значение y не число", "Y");
         return false;
@@ -197,9 +206,7 @@ export default {
       this.checkDot(x, y, this.lastR);
     },
     checkDot: function (x, y){
-      //let login = sessionStorage.getItem("login");
       let json = JSON.stringify({x: x.toString(), y: y.toString(), r: this.r.toString(), user: this.login});
-      //console.log(json);
       axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/checkDot", json)
           .then(response => {
             //console.log(response);
@@ -214,11 +221,11 @@ export default {
 
       axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/getDots", json)
           .then(response => {
-           // console.log(response.data);
             if(response.status === 200) {
               this.dots = response.data;
               sessionStorage.setItem("dots", this.dots);
               this.canvasDrawer.drawAllDots(this.dots);
+
             }
           })
           .catch(error => console.log(error));
@@ -271,14 +278,42 @@ table > tr{
   color: black;
 }
 
-#y {
-  width: 93%;
+/*#y {*/
+/*  width: 93%;*/
+/*}*/
+/*.coord{*/
+/*  display: flex;*/
+/*  justify-content: space-around;*/
+/*}*/
+
+.main-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
 }
+
+@media (min-width: 748px) and (max-width: 1177px) {
+  .main-container{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 747px) {
+  .main-container{
+    grid-template-columns: 1fr;
+  }
+}
+
+
 .coord{
-  display: flex;
-  justify-content: space-around;
-
-
+  margin: 10px;
 }
+.false{
+  color: red;
+}
+.true{
+  color: green;
+}
+
 
 </style>

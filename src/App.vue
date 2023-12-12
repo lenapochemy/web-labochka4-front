@@ -44,23 +44,44 @@ header {
 /*  margin: 0 auto 2rem;*/
 /*}*/
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+/*@media (min-width: 1024px) {*/
+/*  header {*/
+/*    display: flex;*/
+/*    place-items: center;*/
+/*    padding-right: calc(var(--section-gap) / 2);*/
+/*  }*/
+/*  header .wrapper {*/
+/*    display: flex;*/
+/*    place-items: flex-start;*/
+/*    flex-wrap: wrap;*/
+/*  }*/
+/*}*/
 
-  /*.logo {*/
-  /*  margin: 0 2rem 0 0;*/
-  /*}*/
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+header{
+  text-align: center;
 }
+
+/*@media (min-width: 1177px) {*/
+/*  header {*/
+/*    */
+/*    text-align: center;*/
+/*  }*/
+/*}*/
+
+/*@media (min-width: 748px) and (max-width: 1176px){*/
+/*  header {*/
+/*    text-align: left;*/
+
+/*  }*/
+
+/*}*/
+/*@media (max-width: 747px){*/
+/*  header {*/
+/*    text-align: left;*/
+/*  }*/
+
+/*}*/
+
 
 /*.tab-button {*/
 /*  padding: 6px 10px;*/

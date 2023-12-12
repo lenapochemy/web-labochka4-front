@@ -3,11 +3,11 @@
   <h1>Регистрация</h1>
   <form @submit.prevent="registration">
     <div>
-      <label for="login">Логин</label>
+      <label for="login">Логин </label>
       <input type="text" id="login" name="login" v-model="login" required>
     </div>
     <div>
-      <label for="password">Пароль</label>
+      <label for="password">Пароль </label>
       <input type="password" id="password" name="password" v-model="password" required>
     </div>
     <input class="but" type="submit" value="Зарегистрироваться">
@@ -18,7 +18,6 @@
 
 <script>
 import axios from "axios";
-
 
 export default {
   name: "RegistrationComponent",
@@ -31,16 +30,12 @@ export default {
   methods: {
     registration: function (){
       let json = JSON.stringify({login: this.login, password: this.password});
-      //console.log(json);
 
       axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/reg", json)
           .then(response => {
-            //console.log(response.data);
             const result = response.data;
             if(result.result === "success"){
               document.getElementById("res").innerHTML = "registration was success";
-              // document.getElementById("forms").innerHTML = "<FormComponent/>";
-
             } else document.getElementById("res").innerHTML = "this login already used, please try again";
 
           })
@@ -63,6 +58,9 @@ export default {
 }
 .but:hover, .but:focus{
   background-color: lightpink;
+}
+label{
+  font-size: large;
 }
 </style>
 
