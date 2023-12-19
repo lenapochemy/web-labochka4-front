@@ -45,7 +45,7 @@ export default {
           .catch(error => {
             if(error.response.status === 400){
               document.getElementById("res").innerHTML = "Этот логин уже занят, пожалуйста выберите другой";
-            } else document.getElementById("res").innerHTML = "Проблемы с сервером";
+            } else document.getElementById("res").innerHTML = "Проблемы с сервером :(";
             //console.log(error);
           });
 

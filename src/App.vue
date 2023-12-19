@@ -23,13 +23,11 @@ export default {
   <header>
     <div class="wrapper">
       <Header v-bind="headerParams"/>
-      <router-view/>
-
     </div>
   </header>
 
   <main>
-
+    <router-view/>
   </main>
 </template>
 
@@ -57,7 +55,7 @@ header {
 /*  }*/
 /*}*/
 
-header{
+header, main{
   text-align: center;
 }
 

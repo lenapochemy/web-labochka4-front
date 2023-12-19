@@ -24,11 +24,15 @@ export default {
               sessionStorage.removeItem("userToken");
               sessionStorage.removeItem("dots");
               this.$router.push({name: 'start-page'});
-            } else {
-               document.getElementById("logout").innerHTML =  "Проблемы с сервером";
             }
+            // else {
+            //    document.getElementById("logout").innerHTML =  "Проблемы с сервером";
+            // }
           }).catch(error => {
-        console.log(error);
+       // console.log(error);
+        if(error.response.status === 401 || error.response.status === 403){
+          document.getElementById("logout").innerHTML = "Вы уже вышли";
+        } else document.getElementById("logout").innerHTML = "Проблемы с сервером :(";
       })
     }
   }

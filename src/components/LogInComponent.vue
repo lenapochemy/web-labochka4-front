@@ -38,13 +38,19 @@ export default {
               sessionStorage.setItem("userToken", response.data.token);
               //sessionStorage.setItem("login", this.login);
               this.$router.push({name: 'main-page'});
-            } else if(response.status === 401) {
-              document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
-            } else {
-              document.getElementById("res").innerHTML = "Проблемы с сервером";
             }
+            // else if(response.status === 401) {
+            //   document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
+            // } else {
+            //   document.getElementById("res").innerHTML = "Проблемы с сервером";
+            // }
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            //console.log(error);
+            if(error.response.status === 401){
+              document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
+            } else document.getElementById("res").innerHTML = "Проблемы с сервером :(";
+          });
     }
   }
 }

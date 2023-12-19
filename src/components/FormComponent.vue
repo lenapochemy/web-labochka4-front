@@ -17,28 +17,21 @@
       <span class="param">X: </span>
       <input type="radio" id="x-2" name="X" value="-2" v-model="x" />
       <label for="x-2">-2</label>
-
       <input type="radio" id="x-1.5" name="X" value="-1.5" v-model="x"/>
       <label for="x-1.5">-1.5</label>
-
       <input type="radio" id="x-1" name="X" value="-1" v-model="x"/>
       <label for="x-1">-1</label>
-
       <input type="radio" id="x-0.5" name="X" value="-0.5" v-model="x"/>
       <label for="x-0.5">-0.5</label>
-<br>
+        <br>
       <input type="radio" id="x0" name="X" value="0" v-model="x" />
       <label for="x0">0</label>
-
       <input type="radio" id="x0.5" name="X" value="0.5" v-model="x" />
       <label for="x0.5">0.5</label>
-
       <input type="radio" id="x1" name="X" value="1" v-model="x"/>
       <label for="x1">1</label>
-
       <input type="radio" id="x1.5" name="X" value="1.5" v-model="x"/>
       <label for="x1.5">1.5</label>
-
       <input type="radio" id="x2" name="X" value="2" v-model="x" checked/>
       <label for="x2">2</label>
     </div>
@@ -55,28 +48,21 @@
       <span class="param">R: </span>
       <input type="radio" id="r-2" name="R" value="-2" v-model="r" checked @change="incorrectR"/>
       <label for="r-2">-2</label>
-
       <input type="radio" id="r-1.5" name="R" value="-1.5" v-model="r" @change="incorrectR"/>
       <label for="r-1.5">-1.5</label>
-
       <input type="radio" id="r-1" name="R" value="-1" v-model="r" @change="incorrectR"/>
       <label for="r-1">-1</label>
-
       <input type="radio" id="r-0.5" name="R" value="-0.5" v-model="r" @change="incorrectR"/>
       <label for="r-0.5">-0.5</label>
-      <br>
+        <br>
       <input type="radio" id="r0" name="R" value="0" v-model="r" @change="incorrectR"/>
       <label for="r0">0</label>
-
       <input type="radio" id="r0.5" name="R" value="0.5" v-model="r" @change="redrawCanvas"/>
       <label for="r0.5">0.5</label>
-
       <input type="radio" id="r1" name="R" value="1" v-model="r" @change="redrawCanvas"/>
       <label for="r1">1</label>
-
       <input type="radio" id="r1.5" name="R" value="1.5" v-model="r" @change="redrawCanvas"/>
       <label for="r1.5">1.5</label>
-
       <input type="radio" id="r2" name="R" value="2" v-model="r" @change="redrawCanvas"/>
       <label for="r2">2</label>
     </div>
@@ -84,14 +70,14 @@
     <input class="but" type="submit" @click.prevent="checkForm()" value="Проверить"/>
     </div>
   </form>
-<!--  <span>X: {{x}}, Y: {{y}}, R: {{r}}</span>-->
 
   <div class="fail" id="errMessageY"></div>
   <div class="fail" id="errMessageR"></div>
+      <div id="errMessage"></div>
     </div>
 
-  <div class="main-item" id="result_table">
-  <table border="1">
+  <div class="main-item" >
+  <table border="1" id="result_table">
     <thead>
       <th>X</th>
       <th>Y</th>
@@ -99,13 +85,15 @@
       <th>Результат</th>
       <th>Время</th>
     </thead>
+    <tbody>
     <tr v-for="dot in dots">
       <td>{{dot.x}}</td>
       <td>{{dot.y}}</td>
       <td>{{dot.r}}</td>
-      <td v-bind:class="dot.resultClass">{{dot.resultString}}</td>
+      <td v-bind:class="[dot.result ? success: fail]">{{dot.result ? "Точка попала" : "Точка не попала"}}</td>
       <td>{{dot.time}}</td>
     </tr>
+    </tbody>
   </table>
   </div >
 
@@ -114,7 +102,7 @@
 </template>
 
 <script >
-import axios from "axios";
+import axios, {all} from "axios";
 import {CanvasDrawer} from "@/js/CanvasDrawer";
 import LogOutComponent from "@/components/LogOutComponent.vue";
 
@@ -127,6 +115,8 @@ export default {
       r: 2,
       canvasDrawer: null,
       userToken: null,
+      success: "success",
+      fail: "fail",
       dots: []
     }
   },
@@ -138,12 +128,13 @@ export default {
     if(this.userToken == null){
       this.$router.push({name: 'start-page'});
     }
-    this.getDots();
     this.dots = sessionStorage.getItem("dots");
+    //console.log(this.dots);
     const canvas = this.$refs.canvas;
     this.canvasDrawer = new CanvasDrawer(canvas);
     this.canvasDrawer.drawArea(this.r, this.dots);
     this.canvasDrawer.canvas.addEventListener('click', (event) => this.clickDot(event));
+    this.getDots();
   },
   methods: {
     checkForm: function (){
@@ -155,10 +146,19 @@ export default {
         //console.log(json);
         axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/dots/newDot", json)
             .then(response => {
+              this.cleanErrMessage("");
               //console.log(response);
               this.getDots();
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+              //console.log(error)
+              if(error.response.status === 403){
+                document.getElementById("errMessage").innerHTML = "Вы не авторизованы";
+              } else {
+                document.getElementById("errMessage").innerHTML = "Проблемы с сервером :(";
+                //this.cleanTable();
+              }
+            });
       }
     },
     redrawCanvas: function (){
@@ -217,10 +217,19 @@ export default {
       let json = JSON.stringify({x: x.toString(), y: y.toString(), r: this.r.toString(), userToken: this.userToken});
       axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/dots/newDot", json)
           .then(response => {
+            this.cleanErrMessage("");
             //console.log(response);
             this.getDots();
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            //console.log(error);
+            if(error.response.status === 403){
+              document.getElementById("errMessage").innerHTML = "Вы не авторизованы";
+            } else {
+              document.getElementById("errMessage").innerHTML = "Проблемы с сервером :(";
+              //this.cleanTable();
+            }
+          });
 
     },
     getDots: function (){
@@ -230,13 +239,27 @@ export default {
       axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/dots/allDots", json)
           .then(response => {
             if(response.status === 200) {
+              this.cleanErrMessage("");
               this.dots = response.data;
               sessionStorage.setItem("dots", this.dots);
               this.canvasDrawer.drawAllDots(this.dots);
-
             }
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            //console.log(error);
+            // if(error.response.status === 401){
+            //   document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
+            // } else
+            document.getElementById("errMessage").innerHTML = "Проблемы с сервером :(";
+            //this.cleanTable();
+          });
+    },
+    cleanTable: function (){
+      let table = document.querySelector("table");
+      let rowCount = table.rows.length;
+      for(let i = rowCount - 1; i >= 0; i--){
+        table.deleteRow(i);
+      }
     }
   }
 }
@@ -254,10 +277,10 @@ export default {
 .but:hover, .but:focus{
   background-color: lightpink;
 }
-.hello{
-  font-family: fantasy;
-  font-size: 1.5rem;
-}
+/*.hello{*/
+/*  font-family: fantasy;*/
+/*  font-size: 1.5rem;*/
+/*}*/
 
 .param {
   font-size: large;
@@ -324,6 +347,7 @@ table > tr{
 .success{
   color: green;
 }
+
 
 
 </style>
