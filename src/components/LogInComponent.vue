@@ -31,14 +31,17 @@ export default {
   methods: {
     logIn: function (){
       let json = JSON.stringify({login: this.login, password: this.password});
-      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/login", json)
+      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/user/logIn", json)
           .then(response => {
-            if(response.data.result === "success"){
+            if(response.status === 200){
               //document.getElementById("res").innerHTML = "";
-              sessionStorage.setItem("login", this.login);
+              sessionStorage.setItem("userToken", response.data.token);
+              //sessionStorage.setItem("login", this.login);
               this.$router.push({name: 'main-page'});
-            } else {
+            } else if(response.status === 401) {
               document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
+            } else {
+              document.getElementById("res").innerHTML = "Проблемы с сервером";
             }
           })
           .catch(error => console.log(error));

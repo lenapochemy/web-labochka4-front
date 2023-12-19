@@ -12,9 +12,10 @@ export class CanvasDrawer{
 
     drawDot(x, y, r, result){
         //  console.log("r=" + r + " lastR=" + this.lastR);
+        //console.log("x=" + x + " y=" + y + " r=" + r);
         x = this.xToCanvas(x);
         y = this.yToCanvas(y);
-        //console.log("x=" + x + " y=" + y + " r=" + r);
+        // console.log("x=" + x + " y=" + y + " r=" + r);
         if(r == this.lastR){
             if(result) {this.ctx.fillStyle = "green";}
             else {this.ctx.fillStyle = "red";}
@@ -22,7 +23,7 @@ export class CanvasDrawer{
             //this.ctx.fillRect(x, y, 3, 3);
             this.ctx.beginPath();
             this.ctx.moveTo(x, y);
-            this.ctx.arc(x, y, 1.5, 0,   2* Math.PI, false);
+            this.ctx.arc(x, y, 2, 0,   2* Math.PI, false);
             this.ctx.fill();
 
             this.ctx.fillStyle = "deeppink";

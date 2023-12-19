@@ -1,9 +1,9 @@
 <template>
-  <div id="clock">
-    <span class="clocks" id="h"/> : <span class="clocks" id="m"/> : <span class="clocks" id="s"/>
-  </div>
+<!--  <div id="clock">-->
+<!--    <span class="clocks" id="h"/> : <span class="clocks" id="m"/> : <span class="clocks" id="s"/>-->
+<!--  </div>-->
 
-  <div class="hello">Привет, {{login}}!</div>
+<!--  <div class="hello">Привет, {{ userToken }}!</div>-->
   <LogOutComponent/>
 
   <div class="main-container">
@@ -126,7 +126,7 @@ export default {
       y: null,
       r: 2,
       canvasDrawer: null,
-      login: null,
+      userToken: null,
       dots: []
     }
   },
@@ -134,8 +134,8 @@ export default {
     LogOutComponent
   },
   mounted() {
-    this.login = sessionStorage.getItem("login");
-    if(this.login == null){
+    this.userToken = sessionStorage.getItem("userToken");
+    if(this.userToken == null){
       this.$router.push({name: 'start-page'});
     }
     this.getDots();
@@ -149,11 +149,11 @@ export default {
     checkForm: function (){
       if(this.validateY() && this.validateR()) {
         this.cleanErrMessage("Y");
-        this.login = sessionStorage.getItem("login");
+        this.userToken = sessionStorage.getItem("userToken");
 
-        let json = JSON.stringify({x: this.x.toString(), y: this.y.toString(), r: this.r.toString(), user: this.login});
+        let json = JSON.stringify({x: this.x.toString(), y: this.y.toString(), r: this.r.toString(), userToken: this.userToken});
         //console.log(json);
-        axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/checkDot", json)
+        axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/dots/newDot", json)
             .then(response => {
               //console.log(response);
               this.getDots();
@@ -184,20 +184,25 @@ export default {
       }
     },
     validateY: function (){
-      this.y = this.y.replace(",", ".");
-       if (!this.isNumeric(this.y)){
-        this.createErrMessage("Значение y не число", "Y");
-        return false;
-      } else if (this.y.length >= 17) {
-        this.createErrMessage("Слишком много символов в значении y", "Y");
-        return false;
-      } else if(this.y <= -3 || this.y >= 3){
-        this.createErrMessage("Значение y не входит в область допустимых значений (-3; 3)", "Y");
+      if(this.y == null){
+        this.createErrMessage("Значение y не введено", "Y");
         return false;
       } else {
-         this.cleanErrMessage("Y");
-         return true;
-       }
+        this.y = this.y.replace(",", ".");
+        if (!this.isNumeric(this.y)) {
+          this.createErrMessage("Значение y не число", "Y");
+          return false;
+        } else if (this.y.length >= 17) {
+          this.createErrMessage("Слишком много символов в значении y", "Y");
+          return false;
+        } else if (this.y <= -3 || this.y >= 3) {
+          this.createErrMessage("Значение y не входит в область допустимых\nзначений (-3; 3)", "Y");
+          return false;
+        } else {
+          this.cleanErrMessage("Y");
+          return true;
+        }
+      }
     },
     isNumeric: function (n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
@@ -209,8 +214,8 @@ export default {
       this.checkDot(x, y, this.lastR);
     },
     checkDot: function (x, y){
-      let json = JSON.stringify({x: x.toString(), y: y.toString(), r: this.r.toString(), user: this.login});
-      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/checkDot", json)
+      let json = JSON.stringify({x: x.toString(), y: y.toString(), r: this.r.toString(), userToken: this.userToken});
+      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/dots/newDot", json)
           .then(response => {
             //console.log(response);
             this.getDots();
@@ -219,10 +224,10 @@ export default {
 
     },
     getDots: function (){
-      this.login = sessionStorage.getItem("login");
-      let json = JSON.stringify({user: this.login});
+      this.userToken = sessionStorage.getItem("userToken");
+      let json = JSON.stringify({userToken: this.userToken});
 
-      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/getDots", json)
+      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/dots/allDots", json)
           .then(response => {
             if(response.status === 200) {
               this.dots = response.data;
@@ -301,14 +306,14 @@ table > tr{
     grid-template-columns: 1fr;
   }
 }
-#clock{
-  font-family: fantasy;
-  color: dodgerblue;
-  text-shadow: 2px 2px 2px black;
-  font-size: 3rem;
-  word-spacing: 3pt;
-  letter-spacing: 2pt;
-}
+/*#clock{*/
+/*  font-family: fantasy;*/
+/*  color: dodgerblue;*/
+/*  text-shadow: 2px 2px 2px black;*/
+/*  font-size: 3rem;*/
+/*  word-spacing: 3pt;*/
+/*  letter-spacing: 2pt;*/
+/*}*/
 
 .coord{
   margin: 10px;

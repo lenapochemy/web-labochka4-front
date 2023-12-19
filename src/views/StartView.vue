@@ -2,12 +2,17 @@
   <header>
   </header>
   <main>
-    <div id="clock">
-      <span class="clocks" id="h"/> : <span class="clocks" id="m"/> : <span class="clocks" id="s"/>
-    </div>
+<!--    <div id="clock">-->
+<!--      <span class="clocks" id="h"/> : <span class="clocks" id="m"/> : <span class="clocks" id="s"/>-->
+<!--    </div>-->
     <div class="start-container">
-    <div class="start-item" id="buttons">
 
+    <div class="start-item" id="buttons">
+        <img class="capy" src="../img/capy.jpg" alt="capybara">
+
+    </div>
+
+      <div class="start-item">
         <button
             v-for="button in buttons"
             v-bind:key="button"
@@ -16,9 +21,6 @@
         >
           {{button.name}}
         </button>
-    </div>
-
-      <div class="start-item">
         <component v-bind:is="currentButtonComponent"></component>
       </div>
 
@@ -56,29 +58,29 @@ export default {
     currentButtonComponent: function (){
       return this.currentButton + "Component";
     }
-  },
-  mounted() {
-    this.updateClock();
-    sessionStorage.removeItem("login");
-  },
-  methods: {
-    clock: function (){
-      let date = new Date();
-      let hour = date.getHours();
-      let min = date.getMinutes();
-      let sec = date.getSeconds();
-      if(hour < 10) hour = "0" + hour;
-      if(min < 10) min = "0" + min;
-      if(sec < 10) sec = "0" + sec;
-      document.getElementById("h").innerHTML = hour;
-      document.getElementById("m").innerHTML = min;
-      document.getElementById("s").innerHTML = sec;
-    },
-    updateClock: function (){
-      this.clock();
-      setInterval(this.clock, 1000);
-    }
   }
+  // mounted() {
+  //   this.updateClock();
+  //   //sessionStorage.removeItem("userToken");
+  // },
+  // methods: {
+  //   clock: function (){
+  //     let date = new Date();
+  //     let hour = date.getHours();
+  //     let min = date.getMinutes();
+  //     let sec = date.getSeconds();
+  //     if(hour < 10) hour = "0" + hour;
+  //     if(min < 10) min = "0" + min;
+  //     if(sec < 10) sec = "0" + sec;
+  //     document.getElementById("h").innerHTML = hour;
+  //     document.getElementById("m").innerHTML = min;
+  //     document.getElementById("s").innerHTML = sec;
+  //   },
+  //   updateClock: function (){
+  //     this.clock();
+  //     setInterval(this.clock, 1000);
+  //   }
+  // }
 }
 </script>
 
@@ -94,14 +96,14 @@ export default {
 .tab-button:hover, .tab-button:focus, .tab-button:active{
   background-color: deeppink;
 }
-#clock{
-   font-family: fantasy;
-   color: dodgerblue;
-   text-shadow: 2px 2px 2px black;
-   font-size: 5rem;
-   word-spacing: 4pt;
-   letter-spacing: 2pt;
- }
+/*#clock{*/
+/*   font-family: fantasy;*/
+/*   color: dodgerblue;*/
+/*   text-shadow: 2px 2px 2px black;*/
+/*   font-size: 5rem;*/
+/*   word-spacing: 4pt;*/
+/*   letter-spacing: 2pt;*/
+/* }*/
 
 .start-container{
   display: grid;
@@ -131,6 +133,11 @@ export default {
 }
 img{
   height: 400px;
+  margin: 20px;
 }
+/*.capy{*/
 
+/*  height: 300px*/
+/*;*/
+/*}*/
 </style>

@@ -1,6 +1,6 @@
 <template>
   <button id="out" class="but" @click.prevent="logout">Выйти</button>
-<!--  <span id="logout"></span>-->
+  <span id="logout"></span>
 </template>
 
 <script>
@@ -8,17 +8,24 @@ import axios from "axios";
 
 export default {
   name: "LogOutComponent",
+  data(){
+    return {
+      userToken: null
+    }
+  },
   methods: {
     logout: function (){
-      axios.get("http://localhost:8080/lab4-1.0-SNAPSHOT/api/logout")
+      this.userToken = sessionStorage.getItem("userToken");
+      let json = JSON.stringify({userToken: this.userToken});
+      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/user/logOut", json)
           .then(response => {
             if(response.status === 200) {
               // document.getElementById("logout").innerHTML = "logout success";
-              sessionStorage.removeItem("login");
+              sessionStorage.removeItem("userToken");
               sessionStorage.removeItem("dots");
               this.$router.push({name: 'start-page'});
             } else {
-              // document.getElementById("logout").innerHTML =  "you already logout";
+               document.getElementById("logout").innerHTML =  "Проблемы с сервером";
             }
           }).catch(error => {
         console.log(error);

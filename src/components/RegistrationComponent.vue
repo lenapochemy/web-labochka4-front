@@ -31,15 +31,23 @@ export default {
     registration: function (){
       let json = JSON.stringify({login: this.login, password: this.password});
 
-      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/reg", json)
+      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/user/reg", json)
           .then(response => {
-            const result = response.data;
-            if(result.result === "success"){
+            //const result = response.data;
+            if(response.status === 200){
               document.getElementById("res").innerHTML = "Вы зарегистрированы, теперь можете входить";
-            } else document.getElementById("res").innerHTML = "Этот логин уже занят, пожалуйста выберите другой";
+            // } else if(response.status == 400) {
+            //   document.getElementById("res").innerHTML = "Этот логин уже занят, пожалуйста выберите другой";
+             }
+              //else document.getElementById("res").innerHTML = "Проблемы с сервером";
 
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            if(error.response.status === 400){
+              document.getElementById("res").innerHTML = "Этот логин уже занят, пожалуйста выберите другой";
+            } else document.getElementById("res").innerHTML = "Проблемы с сервером";
+            //console.log(error);
+          });
 
     }
   }
