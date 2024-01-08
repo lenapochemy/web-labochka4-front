@@ -1,6 +1,7 @@
 <template>
 
   <div>
+    <LogOutComponent/>
     <FormComponent/>
   </div>
 
@@ -8,11 +9,13 @@
 
 <script>
 import FormComponent from "@/components/FormComponent.vue";
+import LogOutComponent from "@/components/LogOutComponent.vue";
 
 export default {
   name: "MainView",
   components: {
-    FormComponent
+    FormComponent,
+    LogOutComponent
   }
 }
 </script>

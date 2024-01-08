@@ -4,11 +4,11 @@
   <form @submit.prevent="registration">
     <div>
       <label for="login">Логин </label>
-      <input type="text" id="login" name="login" v-model="login" required>
+      <input type="text" id="login" name="login" v-model="regData.login" required>
     </div>
     <div>
       <label for="password">Пароль </label>
-      <input type="password" id="password" name="password" v-model="password" required>
+      <input type="password" id="password" name="password" v-model="regData.password" required>
     </div>
     <input class="but" type="submit" value="Зарегистрироваться">
   </form>
@@ -17,36 +17,33 @@
 </template>
 
 <script>
-import axios from "axios";
+import {api} from '@/axios'
+import {errorHandler} from "@/js/utils";
 
 export default {
   name: "RegistrationComponent",
   data(){
     return {
-      login: null,
-      password: null
+      regData: {
+        login: '',
+        password: ''
+      }
     }
   },
   methods: {
     registration: function (){
-      let json = JSON.stringify({login: this.login, password: this.password});
-
-      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/user/reg", json)
+      api.post("/user/reg", this.regData, {
+        headers: {
+          "Content-Type" : "application/json"
+        }
+      })
           .then(response => {
-            //const result = response.data;
             if(response.status === 200){
               document.getElementById("res").innerHTML = "Вы зарегистрированы, теперь можете входить";
-            // } else if(response.status == 400) {
-            //   document.getElementById("res").innerHTML = "Этот логин уже занят, пожалуйста выберите другой";
              }
-              //else document.getElementById("res").innerHTML = "Проблемы с сервером";
-
           })
           .catch(error => {
-            if(error.response.status === 400){
-              document.getElementById("res").innerHTML = "Этот логин уже занят, пожалуйста выберите другой";
-            } else document.getElementById("res").innerHTML = "Проблемы с сервером :(";
-            //console.log(error);
+            errorHandler(error.response.status, "res", "reg");
           });
 
     }

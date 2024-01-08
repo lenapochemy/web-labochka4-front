@@ -9,7 +9,6 @@ export default {
   },
   mounted() {
     this.updateClock();
-    //sessionStorage.removeItem("userToken");
   },
   methods: {
     clock: function (){
@@ -33,7 +32,7 @@ export default {
 </script>
 
 <template>
-  <div class="greetings">
+  <div >
     <h1 id="my_name">{{name}}, {{group}}</h1>
     <h3 id="lab_work">{{title}}, вариант {{variant}}</h3>
   </div>
@@ -58,18 +57,6 @@ h3 {
   font-size: 1.2rem;
 }
 
-.greetings  {
-  /*text-align: center;*/
-  /*display: flex;*/
-}
-
-
-/*@media (min-width: 1024px) {*/
-/*  .greetings h1,*/
-/*  .greetings h3 {*/
-/*    text-align: left;*/
-/*  }*/
-/*}*/
 
 #my_name, #lab_work {
   font-family: fantasy;

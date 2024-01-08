@@ -4,11 +4,11 @@
   <form @submit.prevent="logIn">
     <div>
       <label for="login">Логин </label>
-      <input type="text" id="login" name="login" v-model="login" required>
+      <input type="text" id="login" name="login" v-model="logData.login" required>
     </div>
     <div>
       <label for="password">Пароль </label>
-      <input type="password" id="password" name="password" v-model="password" required>
+      <input type="password" id="password" name="password" v-model="logData.password" required>
     </div>
     <input class="but" type="submit" value="Войти">
   </form>
@@ -18,38 +18,34 @@
 </template>
 
 <script>
-import axios from "axios";
+import {errorHandler} from "@/js/utils";
+import {api} from "@/axios";
 
 export default {
   name: "LogInComponent",
   data(){
     return {
-      login: null,
-      password: null
+      logData: {
+        login: '',
+        password: ''
+      }
     }
   },
   methods: {
     logIn: function (){
-      let json = JSON.stringify({login: this.login, password: this.password});
-      axios.post("http://localhost:8080/lab4-1.0-SNAPSHOT/api/user/logIn", json)
+      api.post("/user/logIn", this.logData, {
+        headers: {
+          "Content-Type" : "application/json"
+        }
+      })
           .then(response => {
             if(response.status === 200){
-              //document.getElementById("res").innerHTML = "";
-              sessionStorage.setItem("userToken", response.data.token);
-              //sessionStorage.setItem("login", this.login);
+              localStorage.setItem("userToken", response.data.token);
               this.$router.push({name: 'main-page'});
             }
-            // else if(response.status === 401) {
-            //   document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
-            // } else {
-            //   document.getElementById("res").innerHTML = "Проблемы с сервером";
-            // }
           })
           .catch(error => {
-            //console.log(error);
-            if(error.response.status === 401){
-              document.getElementById("res").innerHTML = "Неверный логин или пароль, попробуйте еще раз";
-            } else document.getElementById("res").innerHTML = "Проблемы с сервером :(";
+            errorHandler(error.response.status, "res");
           });
     }
   }
